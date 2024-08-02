@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
@@ -79,7 +79,7 @@ Route::group(
         Route::group([
             'prefix' => 'products',
             'as' => 'products.',
-            'middleware' => 'checkAdmin'
+            // 'middleware' => 'checkAdmin'
         ], function () {
             Route::get('list-product', [ProductController::class, 'listProduct'])->name('listProduct');
             //
@@ -87,14 +87,15 @@ Route::group(
             Route::post('add-product', [ProductController::class, 'postProduct'])->name('postProduct');
             //
             Route::get('edit-product/{id}', [ProductController::class, 'editProduct'])->name('editProduct');
-            Route::put('edit-product', [ProductController::class, 'updateProduct'])->name('updateProduct');
+            Route::put('edit-product/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
             //
-            Route::delete('delete-product', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
-        })->middleware('auth');
+            Route::delete('delete-product/{productid}', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
+        });
         // CRUD  ADMIN/USER
         Route::group([
             'prefix' => 'users',
-            'as' => 'users.'
+            'as' => 'users.',
+            // 'middleware' => 'checkAdmin'
         ], function () {
 
             Route::get('list-user', [UserController::class, 'listUser'])->name('listUser');
@@ -103,9 +104,24 @@ Route::group(
             Route::post('add-user', [UserController::class, 'postUser'])->name('postUser');
             //
             Route::get('edit-user/{id}', [UserController::class, 'editUser'])->name('editUser');
-            Route::put('edit-user', [UserController::class, 'updateUser'])->name('updateUser');
+            Route::put('edit-user/{id}', [UserController::class, 'updateUser'])->name('updateUser');
             //
-            Route::delete('delete-user', [UserController::class, 'deleteUser'])->name('deleteUser');
+            Route::delete('delete-user/{userid}', [UserController::class, 'deleteUser'])->name('deleteUser');
+        });
+        Route::group([
+            'prefix' => 'orders',
+            'as' => 'orders.',
+            // 'middleware' => 'checkAdmin'
+        ], function () {
+
+            Route::get('list-order', [OrderController::class, 'listOrder'])->name('listOrder');
+            Route::get('detail-order/{id}', [OrderController::class, 'seeDetail'])->name('seeDetail');
+
+            //
+            Route::get('edit-order/{id}', [OrderController::class, 'editUser'])->name('editOrder');
+            Route::put('edit-order/{id}', [OrderController::class, 'updateUser'])->name('updateOrder');
+            //
+            Route::delete('delete-order/{userid}', [OrderController::class, 'deleteUser'])->name('deleteOrder');
         });
     }
 );

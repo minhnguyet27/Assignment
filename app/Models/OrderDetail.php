@@ -18,11 +18,14 @@ class OrderDetail extends Model
         'order_id',
         'product_id'
     ];
-    public function order():HasOne {
-        return $this->hasOne(Order::class,);
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
-    public function product():BelongsTo{
-        return $this->belongsTo(Product::class,);
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
     
 }

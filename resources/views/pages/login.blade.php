@@ -76,6 +76,12 @@
                             @error('password')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
+                        </p> <p>
+                            <label>Confirm password <span class="text-danger">*</span></label>
+                            <input id="password_confirmation" type="password" name="password_confirmation" required>
+                            @error('password')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
                         </p>
                         <div class="login_submit">
                             <button type="submit">Register</button>

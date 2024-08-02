@@ -4,15 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class LoginUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        //Cos quyen truy cap vao request ha ko 
-        return true; 
+        return false;
     }
 
     /**
@@ -23,9 +22,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //bail: Neeus loi ko hien thi loi sau
             'name' => 'required|max:255|min:2',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|exits:users',
             'password' => 'required|min:3|confirmed',
         ];
     }
@@ -36,7 +34,7 @@ class StoreUserRequest extends FormRequest
             'name.min' => 'Tên phải có ít nhất 2 ký tự.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email phải đúng định dạng.',
-            'email.unique' => 'Email đã tồn tại.',
+            'email.exits' => 'Email không tồn tại trong hệ thống.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp.',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\Product;
 use App\Models\User;
@@ -26,33 +27,21 @@ class ClientController extends Controller
     {
         return view('pages.login');
     }
-    public function Signup(Request $request)
+    public function Signup(StoreUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:3',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        // create a new user
+        
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
-        return redirect()->route('client.index')->with('success', 'Account created successfully');
+        return redirect()->route('client.getLogin')->with('success', 'Account created successfully');
     }
     public function getLogin()
     {
         return view('pages.login');
     }
-    public function Login(Request $request)
+    public function Login(LoginUserRequest $request)
     {
         $dataLogin = [
             'email' => $request->email,
@@ -84,7 +73,7 @@ class ClientController extends Controller
         Auth::logout();
         $request->session()->regenerateToken(); // sẽ tạo ra một token CSRF mới cho phiên làm việc mới.
         $request->session()->invalidate();//Vô hiệu hóa phiên làm việc hiện tại
-        return redirect()->route('client.getLogin')->with([
+        return redirect()->route('client.index')->with([
             'Logout' => 'Đăng xuất thành công'
         ]);
     }

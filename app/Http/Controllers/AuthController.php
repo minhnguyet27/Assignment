@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class AuthController extends Controller
     {
         return view('admin.index');
     }
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
         $dataLogin = [
             'email' => $request->email,

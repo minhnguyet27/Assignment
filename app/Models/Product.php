@@ -11,7 +11,12 @@ class Product extends Model
     protected $table = 'products';
     public $timestamp = false;
     public $primaryKey = 'product_id';
-    use HasFactory;
-    protected $guarded = [] ;
-    
+    use HasFactory, SoftDeletes;
+    protected $fillable = [
+        'name', 'price', 'description','image_url','quantity','view'];// thêm các cột mới vào đây    ];
+        public function orderDetails()
+        {
+            return $this->hasMany(OrderDetail::class);
+        }   
 }
+ 

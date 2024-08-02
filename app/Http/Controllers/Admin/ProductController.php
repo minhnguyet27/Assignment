@@ -43,24 +43,51 @@ class ProductController extends Controller
             ->with(['message' => 'Thêm mới thành công']);
     }
     //
-    public function editProduct($id)
+    public function editProduct(string $product_id)
     {
-        $product = Product::find($id);
-        return view('admin.Product.edit-product');
+        $product = Product::findOrFail($product_id);
+        return view('admin.Product.edit-product',compact('product'));
     }
-    public function updateProduct(Request $request)
+    public function updateProduct(Request $request, string $product_id)
     {
+        $product = Product::findOrFail($product_id);
+        $linkImage = NULL;
+        if ($request->hasFile('image_url')) {
+            $image = $request->file('image_url');
+            $imgName = time() . "." . $image->getClientOriginalExtension();
+            $image->move(public_path('imageProduct/'), $imgName);
+            $linkImage = 'imageProduct/' .$imgName;
+        }
+        $data = [
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'image_url' => $linkImage,
+            'quantity' => $request->quantity,
+            'view' => $request->view,
+        ];
+  
+        $product->update($data);
+        return redirect()->route('admin.products.listProduct')
+        ->with('message', 'Product Updated Successfully');
+        
+    //     $product = Product::find($product_id);
+    //     $product ->update($data);
+    //     return redirect()->route("admin.products.listProduct")->with([
+    //         'message' => 'Sửa thành công'
+    //     ]);
+        
     }
-    public function deleteProduct(Request $request)
+    public function deleteProduct($productid)
     {
-        $product = Product::where('product_id', $request->product_id)->first();
-        if ($product->image_url!= null) {           
-            // File::delete(public_path($product->image));  // delete image        
-            File::delete(public_path($product->image_url));
+        $product = Product::findOrFail($productid);        
+        //  dd($product);  
+        if ($product->image_url && File::exists(public_path('imageProduct/'. $product->image_url))) { //File::exists Tra ve true or false
+            File::delete(public_path('imageProduct/'. $product->image_url));
         }
         $product->delete();      
         return redirect()->route('admin.products.listProduct')
             ->with(['message' => 'Xóa thành công']);
-
     }
+    
 }
